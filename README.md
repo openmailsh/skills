@@ -6,11 +6,20 @@ License: MIT
 
 ## Install
 
+### Claude Code
+
+```
+/plugin marketplace add openmailsh/skills
+/plugin install openmail@openmailsh-skills
+```
+
+### Any agent (Claude Code, Cursor, Codex, OpenCode, and [39 more](https://github.com/vercel-labs/skills#supported-agents))
+
 ```bash
 npx skills add openmailsh/skills
 ```
 
-Or install a specific skill:
+Or a specific skill:
 
 ```bash
 npx skills add openmailsh/skills@openmail
