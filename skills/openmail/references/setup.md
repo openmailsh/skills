@@ -1,95 +1,41 @@
 # OpenMail Setup
 
-## Prerequisites
+## One command
+
+```bash
+npx @openmail/cli setup --agent claude-code
+```
+
+This handles everything:
+- Opens your browser to sign in (or prompts for your API key)
+- Asks for a mailbox name and display name
+- Creates your inbox
+- Writes credentials to `~/.claude/openmail.env`
+- Writes the skill file to `~/.claude/skills/openmail/SKILL.md`
+
+No global install required — `npx` fetches the CLI automatically.
+
+## Requirements
 
 - Node.js 20+
-- An OpenMail account (free at [console.openmail.sh](https://console.openmail.sh))
+- An OpenMail account (free at [console.openmail.sh](https://console.openmail.sh), no credit card)
 
-## Step 1: Get an API key
-
-1. Go to [console.openmail.sh](https://console.openmail.sh) and sign up (no credit card required)
-2. Navigate to **Settings > API Keys**
-3. Copy your key — it starts with `om_`
-
-## Step 2: Install the CLI
+## Verify
 
 ```bash
-npm install -g @openmail/cli
+npx @openmail/cli status
 ```
-
-Verify installation:
-
-```bash
-openmail --version
-```
-
-## Step 3: Run setup
-
-**For OpenClaw:**
-```bash
-openmail setup --api-key "om_..." --mailbox-name "agent" --display-name "My Agent"
-```
-
-**For Claude Code:**
-```bash
-openmail setup --agent claude-code --api-key "om_..." --mailbox-name "agent" --display-name "My Agent"
-```
-
-What setup does:
-- Creates an inbox at `agent@<your-domain>.openmail.sh`
-- Writes credentials to `~/.openclaw/openmail.env` (OpenClaw) or `~/.claude/openmail.env` (Claude Code)
-- Writes the skill file to `~/.openclaw/skills/openmail/SKILL.md` or `~/.claude/skills/openmail/SKILL.md`
-- Optionally starts the WebSocket bridge for real-time inbound delivery (OpenClaw only)
-
-## Step 4: Verify
-
-```bash
-openmail status
-```
-
-Expected output shows your inbox address, API connection status, and bridge status.
-
-## Environment variables
-
-| Variable | Description |
-|---|---|
-| `OPENMAIL_API_KEY` | Your API key (`om_live_...` or `om_test_...`) |
-| `OPENMAIL_INBOX_ID` | ID of the default inbox (`inb_...`) |
-| `OPENMAIL_ADDRESS` | Email address of the default inbox |
-| `OPENMAIL_API_URL` | Optional. Override API base URL (default: `https://api.openmail.sh`) |
-
-The CLI sources `~/.openclaw/openmail.env` automatically. You can also set these as shell environment variables.
 
 ## Multiple inboxes
 
 To create additional inboxes after setup:
 
 ```bash
-openmail inbox create --mailbox-name "support" --display-name "Support"
-```
-
-To list all inboxes and their IDs:
-
-```bash
-openmail inbox list
-```
-
-Pass `--inbox-id <id>` to any command to target a specific inbox other than the default.
-
-## Reconfigure
-
-To change your usage mode or update credentials without recreating the inbox:
-
-```bash
-openmail setup --reconfigure
+npx @openmail/cli inbox create --mailbox-name "support" --display-name "Support"
 ```
 
 ## Remove
 
-To remove all OpenMail configuration:
-
 ```bash
-openmail setup --reset
+npx @openmail/cli setup --agent claude-code --reset
 ```
-
-To also delete the inbox on the server: `openmail inbox delete --id <inbox-id>`
