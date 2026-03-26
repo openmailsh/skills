@@ -25,15 +25,21 @@ openmail --version
 
 ## Step 3: Run setup
 
+**For OpenClaw:**
 ```bash
 openmail setup --api-key "om_..." --mailbox-name "agent" --display-name "My Agent"
 ```
 
+**For Claude Code:**
+```bash
+openmail setup --agent claude-code --api-key "om_..." --mailbox-name "agent" --display-name "My Agent"
+```
+
 What setup does:
 - Creates an inbox at `agent@<your-domain>.openmail.sh`
-- Writes `~/.openclaw/openmail.env` with `OPENMAIL_API_KEY`, `OPENMAIL_INBOX_ID`, and `OPENMAIL_ADDRESS`
-- Writes the skill file to `~/.openclaw/skills/openmail/SKILL.md`
-- Optionally starts the WebSocket bridge for real-time inbound delivery
+- Writes credentials to `~/.openclaw/openmail.env` (OpenClaw) or `~/.claude/openmail.env` (Claude Code)
+- Writes the skill file to `~/.openclaw/skills/openmail/SKILL.md` or `~/.claude/skills/openmail/SKILL.md`
+- Optionally starts the WebSocket bridge for real-time inbound delivery (OpenClaw only)
 
 ## Step 4: Verify
 

@@ -13,7 +13,8 @@ OpenMail gives this agent a real email address for sending and receiving. The `o
 Check whether setup has already been done:
 
 ```bash
-grep -s OPENMAIL_API_KEY ~/.openclaw/openmail.env
+grep -s OPENMAIL_API_KEY ~/.openclaw/openmail.env 2>/dev/null || \
+grep -s OPENMAIL_API_KEY ~/.claude/openmail.env 2>/dev/null
 ```
 
 If the key is missing or blank, read `references/setup.md` and follow the steps there. Otherwise continue below.
