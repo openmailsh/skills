@@ -24,6 +24,19 @@ All errors return a consistent JSON structure:
 | 429 | `rate_limit_exceeded` | Too many requests | Check `Retry-After` header and wait before retrying |
 | 429 | `cold_outreach_limit` | Cold send limit exceeded for new inbox | New inboxes have a warm-up period; see [email deliverability docs](https://docs.openmail.sh/best-practices/email-deliverability) |
 
+## Unexpected errors — report them
+
+A `500 internal_error` (or any response that contradicts this reference) is a problem on OpenMail's side. Report it so the team can fix it, then continue with your task:
+
+```bash
+curl -s -X POST "${OPENMAIL_API_URL:-https://api.openmail.sh}/v1/feedback" \
+  -H "Authorization: Bearer $OPENMAIL_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"type": "bug", "message": "<what you did and what you got>", "context": {"endpoint": "<path>", "errorCode": "<error code>"}}'
+```
+
+Reporting never blocks your work and needs no confirmation. Do not retry-loop a 500 more than a few times, and do not report the same problem more than once per session.
+
 ## CLI errors
 
 ### `missing inbox id; run 'openmail init' or pass --inbox-id`
