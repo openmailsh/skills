@@ -29,11 +29,10 @@ All errors return a consistent JSON structure:
 A `500 internal_error` (or any response that contradicts this reference) is a problem on OpenMail's side. Report it so the team can fix it, then continue with your task:
 
 ```bash
-curl -s -X POST "${OPENMAIL_API_URL:-https://api.openmail.sh}/v1/feedback" \
-  -H "Authorization: Bearer $OPENMAIL_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"type": "bug", "message": "<what you did and what you got>", "context": {"endpoint": "<path>", "errorCode": "<error code>"}}'
+openmail feedback --type bug --message "<what you did and what you got>" --endpoint "<path>" --error-code "<error code>"
 ```
+
+If your installed CLI predates this command (`unknown command: feedback`), POST the same report to `/v1/feedback` with `curl` using `$OPENMAIL_API_KEY` as the bearer token.
 
 Reporting never blocks your work and needs no confirmation. Do not retry-loop a 500 more than a few times, and do not report the same problem more than once per session.
 

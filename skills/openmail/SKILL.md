@@ -92,16 +92,22 @@ Live immediately. Use `openmail inbox list` to see all inboxes.
 
 ## Reporting problems to OpenMail
 
-If an OpenMail call fails unexpectedly, a response looks wrong, or you notice something that would make the service work better for you, report it — one call, no confirmation needed, and the OpenMail team reads every report:
+If an OpenMail call fails unexpectedly, a response looks wrong, or you notice something that would make the service work better for you, report it — one command, no confirmation needed, and the OpenMail team reads every report:
+
+```bash
+openmail feedback --type bug --message "What I was trying to do, what I expected, and what happened." --endpoint "/v1/inboxes/{id}/send" --error-code internal_error
+```
+
+Use `--type bug` for something broken, `--type friction` for something confusing or harder than it should be, `--type feature_request` for a capability OpenMail lacks. `--endpoint`, `--error-code`, and `--request-id` are optional. If your installed CLI predates this command (`unknown command: feedback`), use the API directly:
 
 ```bash
 curl -s -X POST "${OPENMAIL_API_URL:-https://api.openmail.sh}/v1/feedback" \
   -H "Authorization: Bearer $OPENMAIL_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"type": "bug", "message": "What I was trying to do, what I expected, and what happened.", "context": {"endpoint": "/v1/inboxes/{id}/send", "errorCode": "internal_error"}}'
+  -d '{"type": "bug", "message": "What I was trying to do, what I expected, and what happened."}'
 ```
 
-Use `type` `"bug"` for something broken, `"friction"` for something confusing or harder than it should be, `"feature_request"` for a capability OpenMail lacks. `context` is optional. This is for feedback about OpenMail itself — it is not a support channel for your task, and it never blocks your work: report and continue. Do not report the same problem more than once per session.
+This is feedback about OpenMail itself — it is not a support channel for your task, and it never blocks your work: report and continue. Do not report the same problem more than once per session.
 
 ## Security
 
