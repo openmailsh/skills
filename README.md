@@ -51,7 +51,11 @@ openmail init --api-key om_... --mailbox-name "agent" --display-name "Agent"
 
 Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no credit card required). Full steps: [`references/setup.md`](./skills/openmail/references/setup.md).
 
-**OpenClaw** bundles this skill in its plugin: `openclaw plugins install clawhub:@openmail/openclaw` ([docs](https://docs.openmail.sh/integrations/openclaw)). **Hermes**: `hermes skills install openmailsh/skills/skills/openmail`, then set `OPENMAIL_API_KEY` when asked.
+### Per framework
+
+- **OpenClaw** bundles this skill in its plugin; don't install it separately: `openclaw plugins install clawhub:@openmail/openclaw` ([docs](https://docs.openmail.sh/integrations/openclaw)).
+- **Hermes**: `hermes skills install openmailsh/skills/skills/openmail`. Hermes strips env from its shells, so the skill declares `OPENMAIL_API_KEY` in frontmatter and Hermes prompts for it on first load; or add `OPENMAIL_API_KEY=om_...` to `~/.hermes/.env` yourself. Use a pod-scoped key.
+- **Claude Code, Cursor, Codex**: `openmail init --api-key om_...` once; the CLI saves the key.
 
 ---
 
