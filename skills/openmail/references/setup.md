@@ -22,6 +22,16 @@ Override the saved key any time: `--api-key`, then `OPENMAIL_API_KEY`, then `OPE
 
 Verify: `openmail inbox list`
 
+## Hermes
+
+Hermes strips environment variables from the shells it runs, so the key has to be declared, not just exported. This skill declares `OPENMAIL_API_KEY`; Hermes asks for it the first time the skill loads and stores it in `~/.hermes/.env`. To set it yourself, add a line to that file:
+
+```bash
+echo 'OPENMAIL_API_KEY=om_...' >> ~/.hermes/.env
+```
+
+Then `openmail init --mailbox-name "agent" --display-name "Agent"` (no `--api-key`; the CLI reads the env var). Do not put an account-wide key here; use a pod-scoped key so the agent, and anything it spawns, stays inside one pod.
+
 ## More inboxes
 
 ```bash

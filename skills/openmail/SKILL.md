@@ -2,6 +2,11 @@
 name: openmail
 description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
 license: MIT
+required_environment_variables:
+  - name: OPENMAIL_API_KEY
+    prompt: OpenMail API key
+    help: Create one at https://console.openmail.sh/api-keys (free, no card). Or skip this and run `openmail init --api-key om_...` once; the CLI saves it.
+    required_for: every openmail command
 ---
 
 # OpenMail
@@ -81,13 +86,34 @@ Each message has:
 | `attachments` | Array with `filename`, `url`, `sizeBytes` |
 | `createdAt` | ISO 8601 timestamp |
 
-## Provisioning an additional inbox
+## More inboxes
 
 ```bash
 openmail inbox create --mailbox-name "support" --display-name "Support"
 ```
 
-Live immediately. Use `openmail inbox list` to see all inboxes.
+Live immediately. `openmail inbox list` shows all of them; target one with `--inbox-id` on `send`, `threads list`, and `messages list`.
+
+## Subagents: one inbox and one key each
+
+When you spawn a subagent that needs email, give it its own inbox and a key that only reaches that inbox. Never hand a subagent your own key.
+
+Your key decides what you can do here. Check with `openmail inbox keys list --inbox-id <any inbox>`: a 403 saying the key "is scoped to a single inbox" means you are a child yourself and cannot create inboxes or keys; ask your parent for one. Otherwise:
+
+```bash
+openmail inbox create --mailbox-name "research-3" --display-name "Research 3" --json   # returns id and address
+openmail inbox keys create --inbox-id <id> --name "research-3" --json                  # returns token, shown once
+```
+
+Pass the subagent `OPENMAIL_API_KEY=<token>` and `OPENMAIL_INBOX_ID=<id>` in its environment. It then uses this skill as-is; every command lands on its inbox and nothing else. The token cannot be recovered, so if the subagent loses it, revoke and mint again:
+
+```bash
+openmail inbox keys revoke --inbox-id <id> --key-id <key_id>
+```
+
+When the subagent is done, `openmail inbox delete --inbox-id <id>` removes the inbox and its mail for good. Keep it if a reply might still arrive.
+
+If your own key is pod-scoped (an operator set you up inside a pod), every inbox you create lands in that pod automatically and inherits the pod's sender rules. You can tighten a child inbox with `openmail policy block`, but not loosen what the pod allows.
 
 ## Reporting problems to OpenMail
 

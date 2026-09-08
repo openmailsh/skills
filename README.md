@@ -51,14 +51,14 @@ openmail init --api-key om_... --mailbox-name "agent" --display-name "Agent"
 
 Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no credit card required). Full steps: [`references/setup.md`](./skills/openmail/references/setup.md).
 
-**Using OpenClaw?** Skip this skill and install the plugin: `openclaw plugins install clawhub:@openmail/openclaw` ([docs](https://docs.openmail.sh/integrations/openclaw)).
+**OpenClaw** bundles this skill in its plugin: `openclaw plugins install clawhub:@openmail/openclaw` ([docs](https://docs.openmail.sh/integrations/openclaw)). **Hermes**: `hermes skills install openmailsh/skills/skills/openmail`, then set `OPENMAIL_API_KEY` when asked.
 
 ---
 
 ## Documentation
 
 - [Quickstart](https://docs.openmail.sh/quickstart)
-- [CLI reference](https://docs.openmail.sh/quickstart)
+- [CLI reference](https://docs.openmail.sh/integrations/cli)
 - [API reference](https://docs.openmail.sh/api-reference/introduction)
 - [Concepts](https://docs.openmail.sh/concepts/inboxes)
 
