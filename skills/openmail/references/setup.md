@@ -1,41 +1,35 @@
-# OpenMail Setup
+# OpenMail setup
 
-## One command
+**Using OpenClaw?** Skip this skill. Install the plugin: `openclaw plugins install clawhub:@openmail/openclaw` — see https://docs.openmail.sh/integrations/openclaw.
 
-```bash
-npx @openmail/cli setup --agent claude-code
-```
-
-This handles everything:
-- Opens your browser to sign in (or prompts for your API key)
-- Asks for a mailbox name and display name
-- Creates your inbox
-- Writes credentials to `~/.claude/openmail.env`
-- Writes the skill file to `~/.claude/skills/openmail/SKILL.md`
-
-No global install required — `npx` fetches the CLI automatically.
-
-## Requirements
-
-- Node.js 20+
-- An OpenMail account (free at [console.openmail.sh](https://console.openmail.sh), no credit card)
-
-## Verify
+## Install
 
 ```bash
-npx @openmail/cli status
+npm install -g @openmail/cli   # Node.js 20+; or run: npx @openmail/cli <command>
 ```
 
-## Multiple inboxes
+## Authenticate and create the default inbox
 
-To create additional inboxes after setup:
+Get an API key at https://console.openmail.sh (free, no card). Pass it once:
 
 ```bash
-npx @openmail/cli inbox create --mailbox-name "support" --display-name "Support"
+openmail init --api-key om_... --mailbox-name "agent" --display-name "Agent"
 ```
 
-## Remove
+This creates the inbox and saves both the key and the inbox (id, address) as defaults in `~/.openmail-cli/state.json`. Omit `--mailbox-name`/`--display-name` to be prompted. After this, every command works without `--api-key`, and `send`, `threads list`, and `messages list` need no `--inbox-id`.
+
+Override the saved key any time: `--api-key`, then `OPENMAIL_API_KEY`, then `OPENMAIL_API_KEY=...` in `./.env` take precedence over the state file.
+
+Verify: `openmail inbox list`
+
+## More inboxes
 
 ```bash
-npx @openmail/cli setup --agent claude-code --reset
+openmail inbox create --mailbox-name "support" --display-name "Support"
 ```
+
+Target one inbox with `--inbox-id inb_...` on `send`, `threads list`, and `messages list`, or set `OPENMAIL_INBOX_ID`.
+
+## Reset
+
+Delete `~/.openmail-cli/state.json` to forget both the saved key and the default inbox. Also unset `OPENMAIL_API_KEY` (or remove it from `./.env`) if you set it.

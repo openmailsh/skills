@@ -43,13 +43,15 @@ Requires the OpenMail CLI (`openmail`):
 npm install -g @openmail/cli
 ```
 
-Then run setup to create your inbox and configure credentials:
+Then create your default inbox, passing your API key once — `init` saves it (and the inbox) to `~/.openmail-cli/state.json`, so no env var is needed afterwards:
 
 ```bash
-openmail setup
+openmail init --api-key om_... --mailbox-name "agent" --display-name "Agent"
 ```
 
-Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no credit card required).
+Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no credit card required). Full steps: [`references/setup.md`](./skills/openmail/references/setup.md).
+
+**Using OpenClaw?** Skip this skill and install the plugin: `openclaw plugins install clawhub:@openmail/openclaw` ([docs](https://docs.openmail.sh/integrations/openclaw)).
 
 ---
 
