@@ -29,33 +29,35 @@ All errors return a consistent JSON structure:
 A `500 internal_error` (or any response that contradicts this reference) is a problem on OpenMail's side. Report it so the team can fix it, then continue with your task:
 
 ```bash
-curl -s -X POST "${OPENMAIL_API_URL:-https://api.openmail.sh}/v1/feedback" \
-  -H "Authorization: Bearer $OPENMAIL_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"type": "bug", "message": "<what you did and what you got>", "context": {"endpoint": "<path>", "errorCode": "<error code>"}}'
+openmail feedback --type bug --message "<what you did and what you got>" \
+  --endpoint "<path>" --error-code "<error code>"
 ```
 
 Reporting never blocks your work and needs no confirmation. Do not retry-loop a 500 more than a few times, and do not report the same problem more than once per session.
 
 ## CLI errors
 
+### `missing API key (set --api-key or OPENMAIL_API_KEY)`
+
+No key found in `--api-key`, `OPENMAIL_API_KEY`, or `./.env`. Follow `setup.md`.
+
 ### `missing inbox id; run 'openmail init' or pass --inbox-id`
 
-Setup hasn't been run, or `~/.openclaw/openmail.env` is missing. Run:
+No default inbox saved in `~/.openmail-cli/state.json`. Run:
 
 ```bash
-openmail setup --api-key "om_..."
+openmail init --mailbox-name "agent" --display-name "Agent"
 ```
 
 ### `OpenMail API 401`
 
-The API key is invalid or not being loaded. Verify:
+The API key is invalid. Verify:
 
 ```bash
-grep OPENMAIL_API_KEY ~/.openclaw/openmail.env
+echo "$OPENMAIL_API_KEY"   # or: grep OPENMAIL_API_KEY ./.env
 ```
 
-The key should start with `om_`. Re-run setup if it is wrong or missing.
+The key should start with `om_`. Replace it if it is wrong or missing.
 
 ### `cannot read attachment "..."`
 

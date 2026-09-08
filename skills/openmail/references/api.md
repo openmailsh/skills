@@ -135,10 +135,10 @@ openmail inbox list
 openmail inbox create --mailbox-name "support" --display-name "Support"
 
 # Get inbox details
-openmail inbox get --id "inb_..."
+openmail inbox get --inbox-id "inb_..."
 
 # Delete an inbox
-openmail inbox delete --id "inb_..."
+openmail inbox delete --inbox-id "inb_..."
 ```
 
 Inbox object:
@@ -151,14 +151,6 @@ Inbox object:
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
 ```
-
-### Status & diagnostics
-
-```bash
-openmail status
-```
-
-Shows API connection, default inbox, and bridge status.
 
 ---
 
