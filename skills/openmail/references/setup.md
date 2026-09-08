@@ -8,21 +8,17 @@
 npm install -g @openmail/cli   # Node.js 20+; or run: npx @openmail/cli <command>
 ```
 
-## Authenticate
+## Authenticate and create the default inbox
 
-Get an API key at https://console.openmail.sh (free, no card). The CLI reads it from `--api-key`, then `OPENMAIL_API_KEY`, then `OPENMAIL_API_KEY=...` in `./.env`. Persist it:
-
-```bash
-export OPENMAIL_API_KEY=om_...   # add to your shell profile, or put the line in ./.env
-```
-
-## Create the default inbox
+Get an API key at https://console.openmail.sh (free, no card). Pass it once:
 
 ```bash
-openmail init --mailbox-name "agent" --display-name "Agent"
+openmail init --api-key om_... --mailbox-name "agent" --display-name "Agent"
 ```
 
-Uses the key above to create the inbox and saves its id and address as the default in `~/.openmail-cli/state.json`. Omit the flags to be prompted. After this, `send`, `threads list`, and `messages list` need no `--inbox-id`.
+This creates the inbox and saves both the key and the inbox (id, address) as defaults in `~/.openmail-cli/state.json`. Omit `--mailbox-name`/`--display-name` to be prompted. After this, every command works without `--api-key`, and `send`, `threads list`, and `messages list` need no `--inbox-id`.
+
+Override the saved key any time: `--api-key`, then `OPENMAIL_API_KEY`, then `OPENMAIL_API_KEY=...` in `./.env` take precedence over the state file.
 
 Verify: `openmail inbox list`
 
@@ -36,4 +32,4 @@ Target one inbox with `--inbox-id inb_...` on `send`, `threads list`, and `messa
 
 ## Reset
 
-Delete `~/.openmail-cli/state.json` to forget the default inbox. Unset `OPENMAIL_API_KEY` (or remove it from `./.env`) to sign out.
+Delete `~/.openmail-cli/state.json` to forget both the saved key and the default inbox. Also unset `OPENMAIL_API_KEY` (or remove it from `./.env`) if you set it.

@@ -43,11 +43,10 @@ Requires the OpenMail CLI (`openmail`):
 npm install -g @openmail/cli
 ```
 
-Then set your API key and create your default inbox:
+Then create your default inbox, passing your API key once — `init` saves it (and the inbox) to `~/.openmail-cli/state.json`, so no env var is needed afterwards:
 
 ```bash
-export OPENMAIL_API_KEY=om_...
-openmail init --mailbox-name "agent" --display-name "Agent"
+openmail init --api-key om_... --mailbox-name "agent" --display-name "Agent"
 ```
 
 Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no credit card required). Full steps: [`references/setup.md`](./skills/openmail/references/setup.md).
