@@ -1,5 +1,9 @@
 # OpenMail setup
 
+**Using OpenClaw?** Skip this skill. Install the plugin: `openclaw plugins install clawhub:@openmail/openclaw` — see https://docs.openmail.sh/integrations/openclaw.
+
+**Using Hermes?** Skip this skill. The plugin bundles it: `hermes plugins install openmailsh/hermes-plugin --enable`, then `hermes openmail setup` — see https://docs.openmail.sh/integrations/hermes.
+
 ## Install
 
 ```bash
