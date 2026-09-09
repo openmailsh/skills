@@ -53,6 +53,8 @@ Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no
 
 **Using OpenClaw?** Skip this skill and install the plugin: `openclaw plugins install clawhub:@openmail/openclaw` ([docs](https://docs.openmail.sh/integrations/openclaw)).
 
+**Using Hermes?** Skip this skill too. The plugin bundles it: `hermes plugins install openmailsh/hermes-plugin --enable`, then `hermes openmail setup` ([docs](https://docs.openmail.sh/integrations/hermes)).
+
 ---
 
 ## Documentation
