@@ -160,7 +160,7 @@ All endpoints require `Authorization: Bearer <OPENMAIL_API_KEY>`.
 
 ### POST /v1/inboxes/{id}/send
 
-Send an email. Requires `Idempotency-Key` header (UUID).
+Send an email. `Idempotency-Key` header (UUID) is optional; pass one to make retries safe.
 
 ```http
 POST /v1/inboxes/{id}/send
@@ -187,7 +187,7 @@ Idempotency-Key: <uuid>
 ### GET /v1/inboxes/{id}/threads
 
 ```
-GET /v1/inboxes/{id}/threads?is_read=false&limit=20&offset=0
+GET /v1/inboxes/{id}/threads?isRead=false&limit=20&offset=0
 ```
 
 ### PATCH /v1/threads/{id}
@@ -196,7 +196,7 @@ GET /v1/inboxes/{id}/threads?is_read=false&limit=20&offset=0
 PATCH /v1/threads/{id}
 Content-Type: application/json
 
-{ "is_read": true }
+{ "isRead": true }
 ```
 
 ### GET /v1/threads/{id}/messages
@@ -227,7 +227,7 @@ Returns attachment data. Signed URL included in message payload — fetch prompt
 
 ## Idempotency
 
-The send endpoint requires an `Idempotency-Key` header. Use a unique UUID per send attempt. Retrying with the same key within 24 hours returns the original response without resending.
+The send endpoint accepts an optional `Idempotency-Key` header. Without it the API generates one and sends once. If your code retries on timeouts, pass a unique UUID per send attempt: retrying with the same key within 24 hours returns the original response without resending.
 
 The CLI generates idempotency keys automatically. For direct API calls, generate a UUID:
 
