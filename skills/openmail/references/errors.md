@@ -16,7 +16,6 @@ All errors return a consistent JSON structure:
 | Status | Code | Description | Resolution |
 |--------|------|-------------|------------|
 | 400 | `invalid_mailbox_name` | Mailbox name doesn't meet format requirements | Use lowercase letters, numbers, and hyphens only (e.g. `my-agent`) |
-| 400 | `missing_idempotency_key` | Send endpoint requires `Idempotency-Key` header | Add a UUID header; the CLI does this automatically |
 | 401 | `unauthorized` | Invalid or missing API key | Check `OPENMAIL_API_KEY` is set and starts with `om_` |
 | 404 | `not_found` | Resource doesn't exist or doesn't belong to your account | Verify the inbox ID or thread ID is correct for this account |
 | 409 | `address_taken` | Mailbox name or address already in use | Choose a different `--mailbox-name` |
