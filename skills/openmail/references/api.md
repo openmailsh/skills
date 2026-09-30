@@ -170,6 +170,8 @@ Idempotency-Key: <uuid>
 
 {
   "to": "recipient@example.com",
+  "cc": ["colleague@example.com"],
+  "bcc": ["crm@hubspot.example"],
   "subject": "Hello",
   "body": "Plain text body.",
   "bodyHtml": "<p>HTML body.</p>",
@@ -183,6 +185,8 @@ Idempotency-Key: <uuid>
   ]
 }
 ```
+
+`cc` and `bcc` are optional arrays. `bcc` recipients get the message but are hidden from the To and Cc recipients; use it for CRM logging addresses. Every `to`, `cc`, `bcc`, and `replyTo` address is checked against the inbox's outbound sender rules — one denied address rejects the whole send with `403 recipient_not_permitted`.
 
 ### GET /v1/inboxes/{id}/threads
 
