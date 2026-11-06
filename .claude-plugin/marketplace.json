@@ -6,12 +6,12 @@
   },
   "metadata": {
     "description": "Agent skills for OpenMail — give AI agents a real email address",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "plugins": [
     {
       "name": "openmail",
-      "description": "Dedicated email address for sending and receiving email. Use when the agent needs to send email to external services, receive replies, sign up for services, handle support tickets, or interact with any human institution via email.",
+      "description": "Dedicated email address for creating and reviewing drafts, sending and receiving email. Use when the agent needs to send email to external services, receive replies, sign up for services, handle support tickets, or interact with any human institution via email.",
       "source": "./",
       "strict": false,
       "skills": [

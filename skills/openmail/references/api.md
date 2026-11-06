@@ -53,6 +53,17 @@ Response:
 }
 ```
 
+### Email drafts
+
+```bash
+openmail drafts create --to "person@example.com" --subject "Proposal" --body "Please review." --json
+openmail drafts list --query Proposal --limit 20 --offset 0 --json
+openmail drafts get --draft-id "<id>" --json
+openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
+```
+
+Every action accepts `--inbox-id`. Creation fields are optional, including repeatable `--cc`/`--bcc` and `--body-html`. No attachments. Get returns the stored recipients, subject, body and `updatedAt`. Send requires that exact version; it does not accept recipient or content overrides. A 409 changed-version response requires another review. Successful sends remove the draft; errors retain it.
+
 ### Threads
 
 ```bash
@@ -187,6 +198,13 @@ Idempotency-Key: <uuid>
 ```
 
 `cc` and `bcc` are optional arrays. `bcc` recipients get the message but are hidden from the To and Cc recipients; use it for CRM logging addresses. Every `to`, `cc`, `bcc`, and `replyTo` address is checked against the inbox's outbound sender rules — one denied address rejects the whole send with `403 recipient_not_permitted`.
+
+### Saved drafts
+
+- `POST /v1/inboxes/{id}/drafts`: optional `to`, `cc`, `bcc`, `subject`, `body`, `bodyHtml`; saves without sending.
+- `GET /v1/inboxes/{id}/drafts?limit=20&offset=0&q=Proposal`: returns `{data, total}`.
+- `GET /v1/inboxes/{id}/drafts/{draftId}`: returns stored content and `updatedAt`.
+- `POST /v1/inboxes/{id}/drafts/{draftId}/send` with `{ "updatedAt": "<reviewed version>" }`: sends stored content; returns message/thread IDs. The server supplies duplicate-send protection. Do not replace the version automatically after a 409.
 
 ### GET /v1/inboxes/{id}/threads
 
