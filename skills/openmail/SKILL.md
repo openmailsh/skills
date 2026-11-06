@@ -1,6 +1,6 @@
 ---
 name: openmail
-description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
+description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to create, find, review or send an email draft; send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
 license: MIT
 required_environment_variables:
   - name: OPENMAIL_API_KEY
@@ -35,6 +35,28 @@ openmail send \
 Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...</p>"`. Attach files with `--attach <path>` (repeatable). The response includes `messageId` and `threadId` — store `threadId` to continue the conversation later.
 
 **Always reply in the existing thread.** When the user asks you to reply to an email, look up the thread with `openmail threads list` first, then use `--thread-id`. Never create a new thread unless the user explicitly asks for one.
+
+## Drafts
+
+Save email for review without sending:
+
+```bash
+openmail drafts create --to "person@example.com" --subject "Proposal" --body "Please review." --json
+openmail drafts list --query Proposal --json
+openmail drafts get --draft-id "<id>" --json
+```
+
+Draft fields are optional. `--cc` and `--bcc` are repeatable; `--body-html` adds HTML. Attachments are not supported for drafts. Show the saved To/Cc/Bcc, subject and body to the user. Creating or reviewing a draft does not authorize sending.
+
+When the user asks to send the reviewed draft:
+
+```bash
+openmail drafts send --draft-id "<id>" --updated-at "<exact updatedAt from drafts get>" --json
+```
+
+Use the reviewed version, not a freshly fetched timestamp substituted without review. If it changed, review the changes before retrying. Sending uses stored recipients/content and removes the draft only on success; failed or pending sends retain it. Do not copy a saved draft into `send`.
+
+These commands require a draft-capable CLI (`openmail help drafts`). If unavailable, update the CLI using `references/setup.md`; do not turn a request to save a draft into a send.
 
 ## Checking for new mail
 
@@ -92,7 +114,7 @@ Each message has:
 openmail inbox create --mailbox-name "support" --display-name "Support"
 ```
 
-Live immediately. `openmail inbox list` shows all of them; target one with `--inbox-id` on `send`, `threads list`, and `messages list`.
+Live immediately. `openmail inbox list` shows all of them; target one with `--inbox-id` on `send`, all `drafts` commands, `threads list`, and `messages list`.
 
 ## Subagents: one inbox and one key each
 
