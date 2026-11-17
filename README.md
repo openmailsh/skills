@@ -66,4 +66,4 @@ Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no
 
 **Links:** [openmail.sh](https://openmail.sh) · [console.openmail.sh](https://console.openmail.sh) · [@openmail/cli on npm](https://www.npmjs.com/package/@openmail/cli) · [Discord](https://discord.gg/eFfQFMZbsK)
 
-Draft workflows require a CLI release containing `drafts create|list|get|send` and the draft API. Run `openmail help drafts` to check your installed CLI before using these instructions.
+Draft workflows require the API from [OpenMail #659](https://github.com/openmailsh/openmail/pull/659) and a CLI release containing [CLI #40](https://github.com/openmailsh/cli/pull/40). Run `openmail help drafts` to check your installed CLI before using these instructions. If the latest CLI release does not yet include these commands, wait for that release before enabling draft workflows.

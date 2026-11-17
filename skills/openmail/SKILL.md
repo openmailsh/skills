@@ -46,7 +46,7 @@ openmail drafts list --query Proposal --json
 openmail drafts get --draft-id "<id>" --json
 ```
 
-Drafts belong to the organisation and can be created before choosing a sender. Creation and listing do not use the configured default inbox. List is paginated across accessible drafts, with an optional `--inbox-id` filter; get needs only `--draft-id`. Scoped keys require drafts to be assigned to an inbox within their scope. Draft fields are optional. `--cc` and `--bcc` are repeatable; `--body-html` adds HTML. Attachments are not supported for drafts. Show the saved To/Cc/Bcc, subject and body to the user. Creating or reviewing a draft does not authorize sending.
+Drafts belong to the organisation and can be created before choosing a sender. Creation and listing do not use the configured default inbox. List is paginated across accessible drafts, with an optional `--inbox-id` filter; use `--limit` and `--offset` with the returned `total` to continue through results. Get needs only `--draft-id`. Scoped keys require drafts to be assigned to an inbox within their scope. Draft fields are optional. `--cc` and `--bcc` are repeatable; `--body-html` adds HTML. CLI creation does not accept attachments or reply context, but drafts saved in the console can include both. List/get retain their `attachments` metadata and `threadId`, and sending preserves the stored files and reply thread. Show the saved sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user. Creating or reviewing a draft does not authorize sending.
 
 When the user asks to send the reviewed draft:
 
@@ -54,13 +54,13 @@ When the user asks to send the reviewed draft:
 openmail drafts send --draft-id "<id>" --updated-at "<exact updatedAt from drafts get>" --inbox-id "<sending-inbox-id>" --json
 ```
 
-Choose the sending inbox explicitly, or omit `--inbox-id` only when a sender is already saved on the draft. Use the reviewed version, not a freshly fetched timestamp substituted without review. Sending uses stored recipients/content and removes the draft only on success; failed or pending sends retain it. Do not copy a saved draft into `send`.
+Choose the sending inbox explicitly, or omit `--inbox-id` only when a sender is already saved on the draft. Reply drafts must keep their original inbox. Use the reviewed version, not a freshly fetched timestamp substituted without review. Sending uses stored recipients/content and removes the draft only on success; failed or pending sends retain it. Do not copy a saved draft into `send`.
 
-- `draft_changed`: fetch the draft again, show its current To/Cc/Bcc, subject and full body to the user, and obtain approval before sending the new version.
+- `draft_changed`: fetch the draft again, show its current sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user, and obtain approval before sending the new version.
 - `send_failed`: the draft is saved, but `updatedAt` may advance even when nobody edited the content. Do not retry automatically. Read and show the current draft and obtain approval to retry with its current version.
 - `draft_sending`: do not retry now or change recipients. Wait and check the inbox for the sent message and the saved draft before considering another send. A missing draft may already have been sent.
 
-These commands require a draft-capable CLI (`openmail help drafts`). If unavailable, update the CLI using `references/setup.md`; do not turn a request to save a draft into a send.
+These commands require a draft-capable CLI (`openmail help drafts`). If unavailable, update the CLI using `references/setup.md`. If the latest release still lacks these commands, explain that draft support is awaiting a CLI release; do not turn a request to save a draft into a send.
 
 ## Checking for new mail
 

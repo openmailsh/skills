@@ -62,7 +62,7 @@ openmail drafts get --draft-id "<id>" --json
 openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --inbox-id "<sending-inbox-id>" --json
 ```
 
-Drafts are organisation-owned. Create may omit `--inbox-id`; list accepts it as a filter; get only needs `--draft-id`. Send accepts `--inbox-id` to select the sender, or uses a saved selection. Creation fields are optional, including repeatable `--cc`/`--bcc` and `--body-html`. No attachments. Get returns the stored recipients, subject, body and `updatedAt`. Send requires that exact version; it does not accept recipient or content overrides. A 409 changed-version response requires another review. Successful sends remove the draft; errors retain it.
+Drafts are organisation-owned. Create may omit `--inbox-id`; list accepts it as a filter; get only needs `--draft-id`. List returns `{data, total}` and accepts `--limit` (1–100, default 50) and `--offset` (default 0). Send accepts `--inbox-id` to select the sender, or uses a saved selection. Creation fields are optional, including repeatable `--cc`/`--bcc` and `--body-html`. CLI creation does not accept attachments or reply context. Get/list also return saved console drafts with `attachments` metadata and `threadId`; sending preserves both, and reply drafts keep their original inbox. Review the sending inbox, recipients, subject, full body, attachments and reply thread before sending. Send requires the exact saved `updatedAt`; it does not accept recipient or content overrides. A 409 changed-version response requires another review. Successful sends remove the draft; errors retain it.
 
 ### Threads
 
@@ -203,8 +203,10 @@ Idempotency-Key: <uuid>
 
 - `POST /v1/drafts`: optional `inboxId`, `to`, `cc`, `bcc`, `subject`, `body`, `bodyHtml`; saves without sending.
 - `GET /v1/drafts?limit=20&offset=0&q=Proposal`: returns paginated organisation drafts as `{data, total}`; optional `inboxId` filters the selected sender.
-- `GET /v1/drafts/{draftId}`: returns stored content and `updatedAt`.
+- `GET /v1/drafts/{draftId}`: returns stored content, nullable `inboxId`/`threadId`, `attachments` metadata (`filename`, `contentType`, `sizeBytes`, optional `url`), and `updatedAt`.
 - `POST /v1/drafts/{draftId}/send` with `{ "updatedAt": "<reviewed version>", "inboxId": "<sending inbox>" }`: sends stored content; `inboxId` may be omitted if a sender is already saved. Returns message/thread IDs. The server supplies duplicate-send protection. Do not replace the version automatically after a 409.
+
+The public create endpoint does not accept attachment uploads or `threadId`. Saved console drafts may include both; retrieve and review them before sending. Reply drafts cannot switch away from their original inbox.
 
 ### GET /v1/inboxes/{id}/threads
 
