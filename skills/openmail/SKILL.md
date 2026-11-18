@@ -1,6 +1,6 @@
 ---
 name: openmail
-description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
+description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to create, find, review or send an email draft; send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
 license: MIT
 required_environment_variables:
   - name: OPENMAIL_API_KEY
@@ -35,6 +35,35 @@ openmail send \
 Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...</p>"`. Attach files with `--attach <path>` (repeatable). The response includes `messageId` and `threadId` — store `threadId` to continue the conversation later.
 
 **Always reply in the existing thread.** When the user asks you to reply to an email, look up the thread with `openmail threads list` first, then use `--thread-id`. Never create a new thread unless the user explicitly asks for one.
+
+## Drafts
+
+Draft commands require OpenMail CLI 0.9.0 or later. If you have an older version, follow the [CLI installation instructions](references/setup.md#install), then run `openmail help drafts`. If you cannot save a requested draft, tell the user and leave the email unsent.
+
+Choose the sending inbox when saving a draft. If you need its ID, run `openmail inbox list --json`. Each saved draft belongs to that inbox and appears in its Drafts page and in the main Drafts view.
+
+```bash
+openmail drafts create --inbox-id "<inbox-id>" --to "person@example.com" --subject "Proposal" --body "Please review." --json
+openmail drafts list --json
+openmail drafts list --pod-id "<pod-id>" --inbox-id "<inbox-id>" --query Proposal --json
+openmail drafts get --draft-id "<id>" --json
+```
+
+Only the inbox is required to create a draft. Add Cc/Bcc recipients with repeated `--cc` or `--bcc`, HTML with `--body-html`, and local files with repeated `--attach`. For inline images, see [the API reference](references/api.md#email-drafts).
+
+To draft a reply, pass `--thread-id` from the same inbox and supply the intended recipient with `--to`. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipient, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
+
+Show the user the owning inbox, To/Cc/Bcc, subject, full body, attachments and any thread association. When the user approves sending that version, use the exact `updatedAt` they reviewed.
+
+```bash
+openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
+```
+
+Send uses the saved inbox and content. The optional `--inbox-id` on send must match the owner. A successful send removes the draft. A failed or pending send retains it.
+
+- `draft_changed`: fetch the draft again, show its current sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user, and obtain approval before sending the new version.
+- `send_failed`: the draft is saved, but `updatedAt` may advance even when nobody edited the content. Do not retry automatically. Read and show the current draft and obtain approval to retry with its current version.
+- `draft_sending`: do not retry now or change recipients. Wait and check the inbox for the sent message and the saved draft before considering another send. A missing draft may already have been sent.
 
 ## Checking for new mail
 

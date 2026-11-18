@@ -31,7 +31,7 @@ npx skills add openmailsh/skills@openmail
 
 | Skill | Description |
 |---|---|
-| [openmail](./skills/openmail/SKILL.md) | Dedicated email address for sending, receiving, and replying in threads. Use when the agent needs to send email to external services, receive replies, sign up for services, handle support tickets, or interact with any human institution via email. |
+| [openmail](./skills/openmail/SKILL.md) | Dedicated email address for creating and reviewing inbox drafts, sending, receiving, and replying in threads. Use when the agent needs to send email to external services, receive replies, sign up for services, handle support tickets, or interact with any human institution via email. |
 
 ---
 
@@ -65,3 +65,5 @@ Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no
 - [Concepts](https://docs.openmail.sh/concepts/inboxes)
 
 **Links:** [openmail.sh](https://openmail.sh) · [console.openmail.sh](https://console.openmail.sh) · [@openmail/cli on npm](https://www.npmjs.com/package/@openmail/cli) · [Discord](https://discord.gg/eFfQFMZbsK)
+
+Draft commands require OpenMail CLI 0.9.0 or later. Check your version with `openmail --version` and list the available draft commands with `openmail help drafts`. [CLI 0.9.0 release](https://github.com/openmailsh/cli/releases/tag/v0.9.0)
