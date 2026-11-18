@@ -57,7 +57,7 @@ Response:
 
 ```bash
 openmail drafts create --inbox-id "<inbox-id>" --to "person@example.com" --subject "Proposal" --body "Please review." --attach "./proposal.pdf" --json
-openmail drafts create --inbox-id "<inbox-id>" --thread-id "<thread-id>" --body "Thanks for the update." --json
+openmail drafts create --inbox-id "<inbox-id>" --thread-id "<thread-id>" --to "person@example.com" --body "Thanks for the update." --json
 openmail drafts list --pod-id "<pod-id>" --inbox-id "<inbox-id>" --query Proposal --limit 20 --offset 0 --json
 openmail drafts get --draft-id "<id>" --json
 openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
@@ -215,7 +215,7 @@ Create accepts JSON for text or HTML and multipart form data for uploads. Repeat
 
 A reply uses `threadId` and inherits its subject from that thread. A forward can use `sourceThreadId` alone to appear in the source thread and send into a new one. A referenced thread must belong to the sending inbox. When both IDs are present, they must match.
 
-A successful send removes the draft. On `409 draft_changed`, get the current version and review it again. On `409 draft_sending`, check the inbox and draft before considering another send. On `502 send_failed`, the draft is retained and its version may advance. Review it again before retrying. A different sending inbox returns `400 draft_inbox_locked`.
+Sending requires a recipient, subject and body. A successful send removes the draft. On `409 draft_changed`, get the current version and review it again. On `409 draft_sending`, check the inbox and draft before considering another send. On `502 send_failed`, the draft is retained and its version may advance. Review it again before retrying. A different sending inbox returns `400 draft_inbox_locked`.
 
 ### GET /v1/inboxes/{id}/threads
 

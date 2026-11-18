@@ -49,7 +49,7 @@ openmail drafts get --draft-id "<id>" --json
 
 Only the inbox is required to create a draft. Add Cc/Bcc recipients with repeated `--cc` or `--bcc`, HTML with `--body-html`, and local files with repeated `--attach`. For inline images, see [the API reference](references/api.md#email-drafts).
 
-To draft a reply, pass `--thread-id` from the same inbox. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipient, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
+To draft a reply, pass `--thread-id` from the same inbox and supply the intended recipient with `--to`. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipient, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
 
 Show the user the owning inbox, To/Cc/Bcc, subject, full body, attachments and any thread association. When the user approves sending that version, use the exact `updatedAt` they reviewed.
 
