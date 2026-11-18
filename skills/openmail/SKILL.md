@@ -38,6 +38,8 @@ Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...
 
 ## Drafts
 
+Draft commands require OpenMail CLI 0.9.0 or later. If you have an older version, follow the [CLI installation instructions](references/setup.md#install), then run `openmail help drafts`. If you cannot save a requested draft, tell the user and leave the email unsent.
+
 Choose the sending inbox when saving a draft. If you need its ID, run `openmail inbox list --json`. Each saved draft belongs to that inbox and appears in its Drafts page and in the main Drafts view.
 
 ```bash
@@ -62,8 +64,6 @@ Send uses the saved inbox and content. The optional `--inbox-id` on send must ma
 - `draft_changed`: fetch the draft again, show its current sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user, and obtain approval before sending the new version.
 - `send_failed`: the draft is saved, but `updatedAt` may advance even when nobody edited the content. Do not retry automatically. Read and show the current draft and obtain approval to retry with its current version.
 - `draft_sending`: do not retry now or change recipients. Wait and check the inbox for the sent message and the saved draft before considering another send. A missing draft may already have been sent.
-
-These commands require a draft-capable CLI (`openmail help drafts`). If unavailable, update the CLI using `references/setup.md`. If the latest release still lacks these commands, explain that draft support is awaiting a CLI release; do not turn a request to save a draft into a send.
 
 ## Checking for new mail
 
