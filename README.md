@@ -31,7 +31,7 @@ npx skills add openmailsh/skills@openmail
 
 | Skill | Description |
 |---|---|
-| [openmail](./skills/openmail/SKILL.md) | Dedicated email address for drafts, sending, receiving, and replying in threads. Use when the agent needs to send email to external services, receive replies, sign up for services, handle support tickets, or interact with any human institution via email. |
+| [openmail](./skills/openmail/SKILL.md) | Dedicated email address for creating and reviewing inbox drafts, sending, receiving, and replying in threads. Use when the agent needs to send email to external services, receive replies, sign up for services, handle support tickets, or interact with any human institution via email. |
 
 ---
 
@@ -66,4 +66,4 @@ Get your API key at [console.openmail.sh](https://console.openmail.sh) (free, no
 
 **Links:** [openmail.sh](https://openmail.sh) · [console.openmail.sh](https://console.openmail.sh) · [@openmail/cli on npm](https://www.npmjs.com/package/@openmail/cli) · [Discord](https://discord.gg/eFfQFMZbsK)
 
-Draft workflows require the API from [OpenMail #659](https://github.com/openmailsh/openmail/pull/659) and a CLI release containing [CLI #40](https://github.com/openmailsh/cli/pull/40). Run `openmail help drafts` to check your installed CLI before using these instructions. If the latest CLI release does not yet include these commands, wait for that release before enabling draft workflows.
+Draft workflows require the inbox draft API from [OpenMail #662](https://github.com/openmailsh/openmail/pull/662) and a CLI release containing [CLI #40](https://github.com/openmailsh/cli/pull/40). Run `openmail help drafts` to check your installed CLI before using these instructions. If the latest CLI release does not yet include these commands, wait for that release before enabling draft workflows.

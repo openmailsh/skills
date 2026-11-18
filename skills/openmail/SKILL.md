@@ -38,23 +38,26 @@ Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...
 
 ## Drafts
 
-Save email for review without sending:
+Choose the sending inbox when saving a draft. If you need its ID, run `openmail inbox list --json`. Each saved draft belongs to that inbox and appears in its Drafts page and in the main Drafts view.
 
 ```bash
-openmail drafts create --to "person@example.com" --subject "Proposal" --body "Please review." --json
-openmail drafts list --query Proposal --json
+openmail drafts create --inbox-id "<inbox-id>" --to "person@example.com" --subject "Proposal" --body "Please review." --json
+openmail drafts list --json
+openmail drafts list --pod-id "<pod-id>" --inbox-id "<inbox-id>" --query Proposal --json
 openmail drafts get --draft-id "<id>" --json
 ```
 
-Drafts belong to the organisation and can be created before choosing a sender. Creation and listing do not use the configured default inbox. List is paginated across accessible drafts, with an optional `--inbox-id` filter; use `--limit` and `--offset` with the returned `total` to continue through results. Get needs only `--draft-id`. Scoped keys require drafts to be assigned to an inbox within their scope. Draft fields are optional. `--cc` and `--bcc` are repeatable; `--body-html` adds HTML. CLI creation does not accept attachments or reply context, but drafts saved in the console can include both. List/get retain their `attachments` metadata and `threadId`, and sending preserves the stored files and reply thread. Show the saved sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user. Creating or reviewing a draft does not authorize sending.
+Only the inbox is required to create a draft. Add Cc/Bcc recipients with repeated `--cc` or `--bcc`, HTML with `--body-html`, and local files with repeated `--attach`. For inline images, see [the API reference](references/api.md#email-drafts).
 
-When the user asks to send the reviewed draft:
+To draft a reply, pass `--thread-id` from the same inbox. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipient, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
+
+Show the user the owning inbox, To/Cc/Bcc, subject, full body, attachments and any thread association. When the user approves sending that version, use the exact `updatedAt` they reviewed.
 
 ```bash
-openmail drafts send --draft-id "<id>" --updated-at "<exact updatedAt from drafts get>" --inbox-id "<sending-inbox-id>" --json
+openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
 ```
 
-Choose the sending inbox explicitly, or omit `--inbox-id` only when a sender is already saved on the draft. Reply drafts must keep their original inbox. Use the reviewed version, not a freshly fetched timestamp substituted without review. Sending uses stored recipients/content and removes the draft only on success; failed or pending sends retain it. Do not copy a saved draft into `send`.
+Send uses the saved inbox and content. The optional `--inbox-id` on send must match the owner. A successful send removes the draft. A failed or pending send retains it.
 
 - `draft_changed`: fetch the draft again, show its current sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user, and obtain approval before sending the new version.
 - `send_failed`: the draft is saved, but `updatedAt` may advance even when nobody edited the content. Do not retry automatically. Read and show the current draft and obtain approval to retry with its current version.

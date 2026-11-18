@@ -56,13 +56,16 @@ Response:
 ### Email drafts
 
 ```bash
-openmail drafts create --to "person@example.com" --subject "Proposal" --body "Please review." --json
-openmail drafts list --query Proposal --limit 20 --offset 0 --json
+openmail drafts create --inbox-id "<inbox-id>" --to "person@example.com" --subject "Proposal" --body "Please review." --attach "./proposal.pdf" --json
+openmail drafts create --inbox-id "<inbox-id>" --thread-id "<thread-id>" --body "Thanks for the update." --json
+openmail drafts list --pod-id "<pod-id>" --inbox-id "<inbox-id>" --query Proposal --limit 20 --offset 0 --json
 openmail drafts get --draft-id "<id>" --json
-openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --inbox-id "<sending-inbox-id>" --json
+openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
 ```
 
-Drafts are organisation-owned. Create may omit `--inbox-id`; list accepts it as a filter; get only needs `--draft-id`. List returns `{data, total}` and accepts `--limit` (1–100, default 50) and `--offset` (default 0). Send accepts `--inbox-id` to select the sender, or uses a saved selection. Creation fields are optional, including repeatable `--cc`/`--bcc` and `--body-html`. CLI creation does not accept attachments or reply context. Get/list also return saved console drafts with `attachments` metadata and `threadId`; sending preserves both, and reply drafts keep their original inbox. Review the sending inbox, recipients, subject, full body, attachments and reply thread before sending. Send requires the exact saved `updatedAt`; it does not accept recipient or content overrides. A 409 changed-version response requires another review. Successful sends remove the draft; errors retain it.
+The inbox is required at creation. All content fields are optional. Use repeatable `--cc`, `--bcc`, and `--attach` flags, and `--body-html` for HTML. For a local inline image, put `cid:inline-<lowercase-UUID>@openmail` in the HTML and pass `--inline-image 'inline-<lowercase-UUID>@openmail=./photo.png'` with the same ID. Use `--thread-id` for a reply in the sending inbox, or `--source-thread-id` alone for a draft that will start a new conversation. The latter takes its recipient, subject, and content from the draft you supply. Both appear in their source thread.
+
+Listing defaults to all accessible inboxes. Combine `--inbox-id`, `--pod-id`, `--source-thread-id`, and `--query`. Get the draft by ID and review its owning inbox, recipients, full content, attachments and any thread association before sending. An optional `--inbox-id` on send must match the owner.
 
 ### Threads
 
@@ -201,12 +204,18 @@ Idempotency-Key: <uuid>
 
 ### Saved drafts
 
-- `POST /v1/drafts`: optional `inboxId`, `to`, `cc`, `bcc`, `subject`, `body`, `bodyHtml`; saves without sending.
-- `GET /v1/drafts?limit=20&offset=0&q=Proposal`: returns paginated organisation drafts as `{data, total}`; optional `inboxId` filters the selected sender.
-- `GET /v1/drafts/{draftId}`: returns stored content, nullable `inboxId`/`threadId`, `attachments` metadata (`filename`, `contentType`, `sizeBytes`, optional `url`), and `updatedAt`.
-- `POST /v1/drafts/{draftId}/send` with `{ "updatedAt": "<reviewed version>", "inboxId": "<sending inbox>" }`: sends stored content; `inboxId` may be omitted if a sender is already saved. Returns message/thread IDs. The server supplies duplicate-send protection. Do not replace the version automatically after a 409.
+| Method and path | Request and behavior |
+| --- | --- |
+| `POST /v1/drafts` | Requires `inboxId`. Accepts `to`, `cc`, `bcc`, `subject`, `body`, `bodyHtml`, `threadId`, and `sourceThreadId`. Returns the saved draft. |
+| `GET /v1/drafts` | Returns `{data, total}` for accessible inboxes. Combine `inboxId`, `podId`, `sourceThreadId` and text search `q` (subject, recipient or body). Pagination accepts `limit` (1–100, default 50) and `offset` (default 0). |
+| `GET /v1/drafts/{draftId}` | Returns the owning inbox, saved content, thread associations, `updatedAt`, and attachment metadata including filename, MIME type, byte size, and a download URL when available. Inline images also carry `contentId`. |
+| `POST /v1/drafts/{draftId}/send` | Requires the exact reviewed `updatedAt`. Optional `inboxId` must match the owner. Sends the saved content and returns the sent message and thread IDs. |
 
-The public create endpoint does not accept attachment uploads or `threadId`. Saved console drafts may include both; retrieve and review them before sending. Reply drafts cannot switch away from their original inbox.
+Create accepts JSON for text or HTML and multipart form data for uploads. Repeat the `attachments` field for files or `inlineImages` for PNG, JPEG, GIF or WebP images. Give each inline image the multipart filename `inline-<lowercase-UUID>@openmail` and reference that ID with `cid:` in the HTML. Attachments and images share a 25 MiB limit. Supported embedded or public remote images in HTML are imported when saving the draft.
+
+A reply uses `threadId` and inherits its subject from that thread. A forward can use `sourceThreadId` alone to appear in the source thread and send into a new one. A referenced thread must belong to the sending inbox. When both IDs are present, they must match.
+
+A successful send removes the draft. On `409 draft_changed`, get the current version and review it again. On `409 draft_sending`, check the inbox and draft before considering another send. On `502 send_failed`, the draft is retained and its version may advance. Review it again before retrying. A different sending inbox returns `400 draft_inbox_locked`.
 
 ### GET /v1/inboxes/{id}/threads
 
