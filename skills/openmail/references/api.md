@@ -144,11 +144,11 @@ Message object:
 
 ### Attachments
 
-Read the message ID and attachment ID from `threads get --json`. OpenMail CLI 0.9.1 accepts the attachment ID through `--filename`. Use `--attachment-id` on CLI versions that expose that flag. Choose a separate output path for each file you save.
+With OpenMail CLI 0.9.2 or later, read the message's `id` and the selected attachment's `id` from `threads get --json` or `messages list --json`. Pass both IDs to the attachment command. Choose a separate output path for each file you save.
 
 ```bash
-openmail attachments text --message-id "$message_id" --filename "$attachment_id"
-openmail attachments get --message-id "$message_id" --filename "$attachment_id" --out ./report-copy.pdf
+openmail attachments text --message-id "$message_id" --attachment-id "$attachment_id"
+openmail attachments get --message-id "$message_id" --attachment-id "$attachment_id" --out ./report-copy.pdf
 ```
 
 ### Inboxes

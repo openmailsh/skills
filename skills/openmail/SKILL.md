@@ -131,7 +131,7 @@ Each message has:
 | `attachments` | Each entry has its own `id` and `filename`, with a download `url` when the file is stored, and `sizeBytes` |
 | `createdAt` | ISO 8601 timestamp |
 
-Use the message ID and the selected attachment's ID to download the file or extract its text. Two attachments can share the same filename. [Attachment commands](references/api.md#attachments)
+Pass the message's `id` as `--message-id` and the selected attachment's `id` as `--attachment-id` to download it or extract its text. Two attachments can share the same filename. [Attachment commands](references/api.md#attachments)
 
 ## More inboxes
 
