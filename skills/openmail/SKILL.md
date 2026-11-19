@@ -128,8 +128,10 @@ Each message has:
 | `fromAddr` | Sender address |
 | `subject` | Subject line |
 | `bodyText` | Plain text body (use this) |
-| `attachments` | Array with `filename`, `url`, `sizeBytes` |
+| `attachments` | Each entry has its own `id` and `filename`, with a download `url` when the file is stored, and `sizeBytes` |
 | `createdAt` | ISO 8601 timestamp |
+
+Use the message ID and the selected attachment's ID to download the file or extract its text. Two attachments can share the same filename. [Attachment commands](references/api.md#attachments)
 
 ## More inboxes
 

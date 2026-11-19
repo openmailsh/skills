@@ -132,13 +132,23 @@ Message object:
   "direction": "inbound",
   "attachments": [
     {
+      "id": "32dc7810-8e9a-4b24-b7cc-066956434994",
       "filename": "report.pdf",
-      "url": "https://...",
+      "url": "https://api.openmail.sh/v1/attachments/msg_.../32dc7810-8e9a-4b24-b7cc-066956434994",
       "sizeBytes": 12345
     }
   ],
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
+```
+
+### Attachments
+
+Read the message ID and attachment ID from `threads get --json`. OpenMail CLI 0.9.1 accepts the attachment ID through `--filename`. Use `--attachment-id` on CLI versions that expose that flag. Choose a separate output path for each file you save.
+
+```bash
+openmail attachments text --message-id "$message_id" --filename "$attachment_id"
+openmail attachments get --message-id "$message_id" --filename "$attachment_id" --out ./report-copy.pdf
 ```
 
 ### Inboxes
@@ -248,9 +258,9 @@ Returns messages in a thread, sorted oldest-first.
 GET /v1/inboxes/{id}/messages?direction=inbound&limit=20&offset=0
 ```
 
-### GET /v1/attachments/{messageId}/{filename}
+### GET /v1/attachments/{messageId}/{attachmentId}
 
-Returns attachment data. Signed URL included in message payload — fetch promptly, URLs expire.
+Download the bytes from the attachment's `url` using a bearer key that can read the message. Append `/text` to extract text from the same file. A legacy filename in the route selects the first file with that name.
 
 ---
 
