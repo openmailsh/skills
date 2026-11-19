@@ -1,6 +1,6 @@
 ---
 name: openmail
-description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to create, find, review or send an email draft; send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
+description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to create, find, review, edit, send or delete an email draft; send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
 license: MIT
 required_environment_variables:
   - name: OPENMAIL_API_KEY
@@ -38,20 +38,36 @@ Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...
 
 ## Drafts
 
-Draft commands require OpenMail CLI 0.9.0 or later. If you have an older version, follow the [CLI installation instructions](references/setup.md#install), then run `openmail help drafts`. If you cannot save a requested draft, tell the user and leave the email unsent.
+Draft commands require OpenMail CLI 0.9.1 or later. If you have an older version, follow the [CLI installation instructions](references/setup.md#install), then run `openmail help drafts`. If you cannot save a requested draft, tell the user and leave the email unsent.
 
 Choose the sending inbox when saving a draft. If you need its ID, run `openmail inbox list --json`. Each saved draft belongs to that inbox and appears in its Drafts page and in the main Drafts view.
 
 ```bash
-openmail drafts create --inbox-id "<inbox-id>" --to "person@example.com" --subject "Proposal" --body "Please review." --json
+openmail drafts create --inbox-id "<inbox-id>" --to "person@example.com" --subject "Proposal" --body-html "<p>Please review.</p>" --json
 openmail drafts list --json
 openmail drafts list --pod-id "<pod-id>" --inbox-id "<inbox-id>" --query Proposal --json
 openmail drafts get --draft-id "<id>" --json
 ```
 
-Only the inbox is required to create a draft. Add Cc/Bcc recipients with repeated `--cc` or `--bcc`, HTML with `--body-html`, and local files with repeated `--attach`. For inline images, see [the API reference](references/api.md#email-drafts).
+Only the inbox is required to create a draft. The body is HTML only: pass `--body-html`; OpenMail generates the plain-text version. `--body` is rejected for drafts. Add Cc/Bcc recipients with repeated `--cc` or `--bcc`, and local files with repeated `--attach`. For inline images, see [the API reference](references/api.md#email-drafts).
 
 To draft a reply, pass `--thread-id` from the same inbox and supply the intended recipient with `--to`. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipient, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
+
+To change a saved draft without sending it, read it with `drafts get`, then edit with its exact `updatedAt`. Only the fields you pass change. Editing cannot move a draft to another inbox or change its reply thread.
+
+```bash
+openmail drafts edit --draft-id "<id>" --updated-at "<current updatedAt>" --subject "Revised proposal" --body-html "<p>Revised.</p>" --json
+```
+
+If the edit returns `draft_changed`, someone changed the draft after you read it. Read it again and reapply the requested change to the current version. Never overwrite newer edits automatically.
+
+To discard a draft, only when the user asks, read it and delete that exact version. Deletion removes the draft and its attachments, sends nothing, and cannot be undone.
+
+```bash
+openmail drafts delete --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
+```
+
+On `draft_changed`, show the user the current draft and confirm before deleting it. Never retry with a newer version automatically.
 
 Show the user the owning inbox, To/Cc/Bcc, subject, full body, attachments and any thread association. When the user approves sending that version, use the exact `updatedAt` they reviewed.
 
