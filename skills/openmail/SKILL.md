@@ -27,12 +27,17 @@ If it fails with `missing API key` (or `openmail` is not found), read `reference
 
 ```bash
 openmail send \
-  --to "alex@example.com,sam@example.com" \
+  --to alex@example.com \
   --subject "Subject line" \
   --body "Plain text body."
 ```
 
-For one recipient, pass their address. For several direct recipients, use one quoted, comma-separated `--to` value as above. They receive one message and can see every To address. Use the same form for thread replies and drafts, and keep each person in the To, Cc or Bcc role the user requested.
+For multiple direct recipients, choose the syntax your CLI supports. The same form works for sends, thread replies and drafts.
+
+- If `openmail help send` says “repeat the flag”, pass `--to alex@example.com --to sam@example.com`.
+- On CLI 0.10.0, pass a single quoted value, `--to "alex@example.com,sam@example.com"`.
+
+Everyone in To receives the same message and can see every To address. Keep each person in the To, Cc or Bcc role the user requested.
 
 Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...</p>"`. Attach files with `--attach <path>` (repeatable). The response includes `messageId` and `threadId` — store `threadId` to continue the conversation later.
 

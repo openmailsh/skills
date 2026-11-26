@@ -33,7 +33,7 @@ openmail send \
 ```
 
 Flags:
-- `--to` (required) — one address or a quoted comma-separated list such as `--to "alex@example.com,sam@example.com"`. Use one flag with CLI 0.10.0. This works for immediate and scheduled sends, replies and sends with attachments.
+- `--to` (required) — pass one address per flag when `openmail help send` says “repeat the flag”, e.g. `--to alex@example.com --to sam@example.com`. On CLI 0.10.0 use one flag with a quoted list, `--to "alex@example.com,sam@example.com"`. Both forms preserve the To order on the versions that support them, including for replies, scheduled sends and sends with attachments.
 - `--subject` (required unless `--thread-id` is set) — email subject
 - `--body` (required) — plain text body
 - `--body-html` — optional HTML body
@@ -56,6 +56,7 @@ Response:
 ### Email drafts
 
 ```bash
+# CLI 0.10.0 examples use one --to flag for multiple addresses.
 openmail drafts create --inbox-id "<inbox-id>" --to "alex@example.com,sam@example.com" --subject "Proposal" --body-html "<p>Please review.</p>" --attach "./proposal.pdf" --json
 openmail drafts create --inbox-id "<inbox-id>" --thread-id "<thread-id>" --to "person@example.com" --body-html "<p>Thanks for the update.</p>" --json
 openmail drafts list --pod-id "<pod-id>" --inbox-id "<inbox-id>" --query Proposal --limit 20 --offset 0 --json
@@ -67,7 +68,7 @@ openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --jso
 
 The inbox is required at creation. All content fields are optional. Use repeatable `--cc`, `--bcc`, and `--attach` flags. Draft bodies are HTML only (`--body-html`); the API generates the plain-text version. For a local inline image, put `cid:inline-<lowercase-UUID>@openmail` in the HTML and pass `--inline-image 'inline-<lowercase-UUID>@openmail=./photo.png'` with the same ID. Use `--thread-id` for a reply in the sending inbox, or `--source-thread-id` alone for a draft that will start a new conversation. The latter takes its recipients, subject, and content from the draft you supply. Both appear in their source thread.
 
-On edit, `--to` replaces the entire To list and `--clear-to` clears it.
+When `openmail help drafts` says “Repeat --to”, create or edit with one flag per recipient, e.g. `--to alex@example.com --to robin@example.com`. On edit, the supplied addresses replace the entire To list. Use `--clear-to` to clear it.
 
 Listing defaults to all accessible inboxes. Combine `--inbox-id`, `--pod-id`, `--source-thread-id`, and `--query`. Get the draft by ID and review its owning inbox, recipients, full content, attachments and any thread association before sending. An optional `--inbox-id` on send must match the owner.
 
