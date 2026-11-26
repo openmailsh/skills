@@ -267,6 +267,12 @@ Returns messages in a thread, sorted oldest-first.
 GET /v1/inboxes/{id}/messages?direction=inbound&limit=20&offset=0
 ```
 
+### Inbox folders
+
+`GET /v1/inboxes/{id}/folders` returns `data` with each folder’s numeric `id`, full `name`, and `role`. Custom folders have a null role and appear even when empty.
+
+`GET /v1/inboxes/{id}/folders/{folderId}/messages` returns `data` and `total`. Pass the ID from the same inbox. Results are newest first. Each item has an `id` and a `kind` of `message` or `draft`. Use `limit` (default 50, maximum 100) and `offset` (default 0) to page through them.
+
 ### GET /v1/attachments/{messageId}/{attachmentId}
 
 Download the bytes from the attachment's `url` using a bearer key that can read the message. Append `/text` to extract text from the same file. A legacy filename in the route selects the first file with that name.
