@@ -27,10 +27,12 @@ If it fails with `missing API key` (or `openmail` is not found), read `reference
 
 ```bash
 openmail send \
-  --to "recipient@example.com" \
+  --to alex@example.com --to sam@example.com \
   --subject "Subject line" \
   --body "Plain text body."
 ```
+
+Pass one `--to` flag per direct recipient for sends, thread replies and drafts. Everyone in To receives the same message and can see every To address. Keep each person in the To, Cc or Bcc role the user requested.
 
 Reply in a thread with `--thread-id thr_...`. Add HTML with `--body-html "<p>...</p>"`. Attach files with `--attach <path>` (repeatable). The response includes `messageId` and `threadId` — store `threadId` to continue the conversation later.
 
@@ -51,7 +53,7 @@ openmail drafts get --draft-id "<id>" --json
 
 Only the inbox is required to create a draft. The body is HTML only: pass `--body-html`; OpenMail generates the plain-text version. `--body` is rejected for drafts. Add Cc/Bcc recipients with repeated `--cc` or `--bcc`, and local files with repeated `--attach`. For inline images, see [the API reference](references/api.md#email-drafts).
 
-To draft a reply, pass `--thread-id` from the same inbox and supply the intended recipient with `--to`. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipient, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
+To draft a reply, pass `--thread-id` from the same inbox and supply the intended recipients with `--to`. OpenMail derives the reply subject and shows the draft in the thread. For a forward that starts a new conversation, pass `--source-thread-id` alone and supply the intended recipients, subject, and content. The forward draft also appears in its source thread. Use `drafts list --source-thread-id "<thread-id>"` to find either kind. The list includes every accessible inbox by default. Inbox, pod, source thread and text filters can be combined. Use `--limit`, `--offset`, and the returned `total` to page through results.
 
 To change a saved draft without sending it, read it with `drafts get`, then edit with its exact `updatedAt`. Only the fields you pass change. Editing cannot move a draft to another inbox or change its reply thread.
 
@@ -69,7 +71,7 @@ openmail drafts delete --draft-id "<id>" --updated-at "<reviewed updatedAt>" --j
 
 On `draft_changed`, show the user the current draft and confirm before deleting it. Never retry with a newer version automatically.
 
-Show the user the owning inbox, To/Cc/Bcc, subject, full body, attachments and any thread association. When the user approves sending that version, use the exact `updatedAt` they reviewed.
+Show the user the owning inbox, every address in `toRecipients`, Cc/Bcc, subject, full body, attachments and any thread association. When the user approves sending that version, use the exact `updatedAt` they reviewed.
 
 ```bash
 openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json

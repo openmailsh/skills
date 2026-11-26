@@ -15,6 +15,7 @@ All errors return a consistent JSON structure:
 
 | Status | Code | Description | Resolution |
 |--------|------|-------------|------------|
+| 400 | `too_many_recipients` | Too many recipients for one message | Use up to 50 distinct addresses across To, Cc and Bcc |
 | 400 | `invalid_mailbox_name` | Mailbox name doesn't meet format requirements | Use lowercase letters, numbers, and hyphens only (e.g. `my-agent`) |
 | 401 | `unauthorized` | Invalid or missing API key | Check `OPENMAIL_API_KEY` is set and starts with `om_` |
 | 404 | `not_found` | Resource doesn't exist or doesn't belong to your account | Verify the inbox ID or thread ID is correct for this account |
@@ -64,7 +65,7 @@ The file path doesn't exist or isn't readable. Check the path is correct and the
 
 ### `missing --to`
 
-The `--to` flag is required for `openmail send`. Always specify a recipient address.
+Pass one `--to` flag per direct recipient, e.g. `--to alex@example.com --to sam@example.com`. Sending requires at least one To address.
 
 ### `missing --subject`
 
