@@ -1,6 +1,6 @@
 ---
 name: openmail
-description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to create, find, review, edit, send or delete an email draft; send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
+description: Gives the agent a real email address for sending and receiving email. Use this skill when the user needs to browse an inbox folder or create, find, review, edit, send or delete an email draft; send a message to any person, service, or company; receive a reply; sign up for a website or service and confirm the account; receive a verification code, magic link, or password reset; handle an inbound support request; or interact with anything that communicates by email — even if the user doesn't say "email" explicitly and instead says things like "reach out to them", "contact support", "sign up", "wait for their reply", "check if they responded", or "subscribe".
 license: MIT
 required_environment_variables:
   - name: OPENMAIL_API_KEY
@@ -111,6 +111,17 @@ openmail threads unread --thread-id "thr_..."
 `threads get` returns messages sorted oldest-first. Read the full thread before replying.
 
 Each thread has an `isRead` flag. New inbound threads start as unread. Sending a reply auto-marks the thread as read.
+
+## Browsing inbox folders
+
+With CLI 0.12.0 or later, list folders in the requested inbox and choose the matching name or path. Use its numeric ID in the same inbox (shown here as `42`).
+
+```bash
+openmail folders list --inbox-id inb_xxx --json
+openmail folders messages --inbox-id inb_xxx --folder-id 42 --limit 20 --offset 0 --json
+```
+
+Items appear newest first. If `total` exceeds the number fetched, continue with the next offset. In Drafts, use `kind` to distinguish a saved draft from a message. Read a saved draft with `openmail drafts get --draft-id <id> --json`.
 
 ## Messages
 
