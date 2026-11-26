@@ -145,7 +145,7 @@ Message object:
 }
 ```
 
-Use `toRecipients` for the visible To addresses in header order. It can be empty when no To address was visible. The legacy `toAddr` holds the inbox address on inbound mail and the primary recipient on outbound mail.
+Use `toRecipients` for the visible To addresses in header order. It can be empty when no To address was visible. `toAddr` holds the inbox address on inbound mail and the primary recipient on outbound mail.
 
 ### Attachments
 
@@ -217,7 +217,7 @@ Idempotency-Key: <uuid>
 }
 ```
 
-For multiple direct recipients, pass an ordered array in JSON `to`. For multipart sends, repeat the `to` field once per recipient. Every To recipient sees the full To list. Amazon SES allows up to 50 distinct addresses across To, Cc and Bcc per message. Explicit `unsubscribe: true` requires exactly one recipient across those fields.
+For multiple direct recipients, pass an ordered array in JSON `to`. For multipart sends, repeat the `to` field once per recipient. Every To recipient sees the full To list. Explicit `unsubscribe: true` requires exactly one recipient across To, Cc and Bcc.
 
 `cc` and `bcc` are optional arrays. `bcc` recipients get the message but are hidden from the To and Cc recipients; use it for CRM logging addresses. Every `to`, `cc`, `bcc`, and `replyTo` address is checked against the inbox's outbound sender rules — one denied address rejects the whole send with `403 recipient_not_permitted`.
 
