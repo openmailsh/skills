@@ -240,6 +240,8 @@ A reply uses `threadId` and inherits its subject from that thread. A forward can
 
 Editing, deleting and sending return `409 draft_changed` for a stale `updatedAt`, and are blocked while a send is pending or accepted. Never reuse a newer version automatically.
 
+To schedule the reviewed draft, add `--send-at <iso-8601>` to `drafts send`. Include the timezone and choose a time 30 seconds to 30 days ahead. On acceptance the draft leaves Drafts. Report the scheduled time and keep the returned `id` to reschedule or cancel it. The REST field is `sendAt`.
+
 Sending requires a recipient, subject and body. A successful send removes the draft. On `409 draft_changed`, get the current version and review it again. On `409 draft_sending`, check the inbox and draft before considering another send. On `502 send_failed`, the draft is retained and its version may advance. Review it again before retrying. A different sending inbox returns `400 draft_inbox_locked`.
 
 ### GET /v1/inboxes/{id}/threads
