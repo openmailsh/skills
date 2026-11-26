@@ -33,7 +33,7 @@ openmail send \
 ```
 
 Flags:
-- `--to` (required) — repeat once per direct recipient, e.g. `--to alex@example.com --to sam@example.com`. The addresses stay in that order on sends, replies and scheduled sends, including when you attach files.
+- `--to` (required) — repeat once per direct recipient, e.g. `--to alex@example.com --to sam@example.com`.
 - `--subject` (required unless `--thread-id` is set) — email subject
 - `--body` (required) — plain text body
 - `--body-html` — optional HTML body
