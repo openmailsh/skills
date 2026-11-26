@@ -65,7 +65,7 @@ The file path doesn't exist or isn't readable. Check the path is correct and the
 
 ### `missing --to`
 
-The `--to` flag is required for `openmail send`. Pass an address with `--to`. For multiple recipients, use `--to alex@example.com --to sam@example.com` when `openmail help send` advertises repeated flags. CLI 0.10.0 accepts a single quoted value, `--to "alex@example.com,sam@example.com"`.
+Pass one `--to` flag per direct recipient, e.g. `--to alex@example.com --to sam@example.com`. Sending requires at least one To address.
 
 ### `missing --subject`
 
