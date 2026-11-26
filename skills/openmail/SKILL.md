@@ -77,6 +77,8 @@ Show the user the owning inbox, every address in `toRecipients`, Cc/Bcc, subject
 openmail drafts send --draft-id "<id>" --updated-at "<reviewed updatedAt>" --json
 ```
 
+With CLI 0.13.0 or later, schedule the reviewed draft by adding `--send-at <iso-8601>` to `drafts send`. Include the timezone and choose a time 30 seconds to 30 days ahead. On acceptance the draft leaves Drafts. Report the scheduled time and keep the returned `id` to reschedule or cancel it.
+
 Send uses the saved inbox and content. The optional `--inbox-id` on send must match the owner. A successful send removes the draft. A failed or pending send retains it.
 
 - `draft_changed`: fetch the draft again, show its current sending inbox, To/Cc/Bcc, subject, full body, attachments and reply thread to the user, and obtain approval before sending the new version.
