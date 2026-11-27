@@ -125,6 +125,8 @@ openmail folders messages --inbox-id inb_xxx --folder-id 42 --limit 20 --offset 
 
 Items appear newest first. If `total` exceeds the number fetched, continue with the next offset. In Drafts, use `kind` to distinguish a saved draft from a message. Read a saved draft with `openmail drafts get --draft-id <id> --json`.
 
+With CLI 0.14.0 or later, use `folders create --name Finance/Receipts` to create a folder and its missing parents. Use the numeric folder ID from the same inbox for `folders rename --folder-id 42 --name Finance/Invoices`, `folders move --message-id MESSAGE_ID --folder-id 42`, or `folders delete --folder-id 42`. Renaming or deleting a custom folder includes its descendants. Deletion returns filed mail to Inbox or Sent and keeps trashed messages in Trash. Use `folders restore --message-id MESSAGE_ID` to restore a message from Trash with a pod or account key.
+
 ## Messages
 
 ```bash
