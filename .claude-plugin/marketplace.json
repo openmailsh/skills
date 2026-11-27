@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Agent skills for OpenMail — give AI agents a real email address",
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "plugins": [
     {
